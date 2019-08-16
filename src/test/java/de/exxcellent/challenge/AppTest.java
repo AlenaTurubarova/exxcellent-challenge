@@ -5,6 +5,7 @@ import de.exxcellent.challenge.mappers.TeamMapper;
 import de.exxcellent.challenge.mappers.WeatherDayMapper;
 import de.exxcellent.challenge.model.Team;
 import de.exxcellent.challenge.model.WeatherDay;
+import de.exxcellent.challenge.operations.Operations;
 import de.exxcellent.challenge.readers.CsvReader;
 import de.exxcellent.challenge.readers.Reader;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +18,8 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Example JUnit4 test case.
- * @author Benjamin Schmid <benjamin.schmid@exxcellent.de>
+ * JUnit4 test case.
+ * @author Alona Turubarova
  */
 public class AppTest {
 
@@ -51,8 +52,29 @@ public class AppTest {
     }
 
     @Test
-    public void runFootball() {
-        App.main("--football", "football.csv");
+    public void shouldReturnMinimalDaysTemperature() {
+        assertEquals(32, Operations.findMinParameterValue(days, WeatherDay::getMinTemperature));
+    }
+
+    @Test
+    public void shouldReturnDayWithMinimalTemperature() {
+        WeatherDay day = new WeatherDay();
+        day.setDayNumber(9);
+        day.setMinTemperature(32);
+        assertEquals(day, Operations.findObjectWithMinParameterValue(days, WeatherDay::getMinTemperature).orElse(new WeatherDay()));
+    }
+
+    @Test
+    public void shouldReturnMinimalTeamGoal() {
+        assertEquals(29, Operations.findMinParameterValue(teams, Team::getGoals));
+    }
+
+    @Test
+    public void shouldReturnTeamWithMinimalGoal() {
+        Team team = new Team();
+        team.setName("Sunderland");
+        team.setGoals(29);
+        assertEquals(team, Operations.findObjectWithMinParameterValue(teams, Team::getGoals).orElse(new Team()));
     }
 
     private int getNumberOfRowsFromCSV(String filePath) throws FileNotFoundException {
